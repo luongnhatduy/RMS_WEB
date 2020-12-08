@@ -1,0 +1,181 @@
+<div class="col-md-12">
+  <ba-card cardTitle="Danh Sách Hóa Đơn" baCardClass="with-scroll table-panel height-ba-card">
+    <div class="vertical-scroll">
+      <table class="table table-condensed table-hover ">
+        <thead>
+        <tr>
+          <th class="table-id">STT</th>
+          <th>Tên Khách Hàng</th>
+          <th>Số Điện Thoại</th>
+          <th>Bàn</th>
+          <th>Menu</th>
+          <th>Trạng Thái</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of danhSachHoaDon; let i = index" (click)="showDetailHoaDon(item)">
+          <td class="table-id">{{i + 1}}</td>
+          <td>{{ item.khachHang.tenKhachHang }}</td>
+          <td>{{ item.khachHang.sdt }}</td>
+          <td>{{ item.datBan.ban.tenBan }}</td>
+          <td>{{ item.datBan.menu.tenMenu }}</td>
+          <td>
+            <div class="col-sm-4 col-6 col-lg-4 col-md-6">
+              <div class="btn-group flex-dropdown" ngbDropdown>
+                <button type="button"
+                        class="btn btn-{{ item.trangThai === 0 ? 'success' : 'warning' }}">
+                  {{ item.trangThai === 0 ? 'Thanh Toán' : 'Chưa Thanh Toán' }}
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </ba-card>
+</div>
+<p-dialog header="Thông Tin Hóa Đơn" [(visible)]="displayDialog" [responsive]="false" showEffect="fade"
+          [modal]="true"
+          width="600px" (onAfterHide)="onDialogHide()">
+  <div class="ui-grid ui-grid-responsive ui-grid-pad" *ngIf="detailHoaDon"
+       style="font-size:16px;text-align:center;padding:20px; width: 700px;  height: 500px !important;">
+    <div class="row">
+      <div class="col-lg-8 col-md-12">
+        <div class="ui-grid-col-10"
+             style="width: initial;padding-top: 20px; padding-bottom: 10px; padding-left: 200px;">
+          Tên Bàn:
+          {{detailHoaDon.datBan.ban.tenBan}}
+        </div>
+        <div class="ui-grid-col-10" style="width: initial; padding-left: 200px; padding-bottom: 10px">Ngày Đặt:
+          {{detailHoaDon.datBan.ngayGioDat}}
+        </div>
+        <div class="ui-grid-col-10" style="width: initial; padding-left: 200px; padding-bottom: 10px">Tên Menu:
+          {{detailHoaDon.datBan.menu.tenMenu}}
+        </div>
+        <div class="ui-grid-col-10" style="width: initial; padding-left: 200px; padding-bottom: 10px">Nhân viên:
+          {{detailHoaDon.nhanVien.ho}} {{detailHoaDon.nhanVien.ten}}
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-12">
+        <div class="col-sm-4 col-6 col-lg-4 col-md-6">
+          <div class="btn-group flex-dropdown" ngbDropdown>
+            <button type="button"
+                    class="btn btn-{{ detailHoaDon.trangThai === 0 ? 'success' : 'warning' }}">
+              {{ detailHoaDon.trangThai === 0 ? 'Thanh Toán' : 'Chưa Thanh Toán' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-col-10">
+      <p-tabView>
+        <p-tabPanel header="Thông Tin Khách Hàng">
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px; padding-top: 10px; ">Họ Tên Khách
+              Hàng:
+              {{detailHoaDon.khachHang.tenKhachHang}}
+            </div>
+            <div class="ui-grid-col-2" style="text-align:center"><img style="
+    width: 50px;" src="assets/images/{{detailHoaDon.khachHang.theUuDai.tenThe === 'VIP' ? 'vip.png': ''}} "></div>
+          </div>
+
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px">Số Điện Thoại:
+              {{detailHoaDon.khachHang.sdt}}
+            </div>
+          </div>
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px">Địa Chỉ:
+              {{detailHoaDon.khachHang.diaChi}}
+            </div>
+          </div>
+
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px">Điểm Thưởng:
+              {{detailHoaDon.khachHang.diemThuong}}
+            </div>
+          </div>
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px">Chiết Khấu:
+              {{detailHoaDon.khachHang.theUuDai.chietKhau}} %
+            </div>
+
+          </div>
+
+        </p-tabPanel>
+        <p-tabPanel header="Thông Tin Món Ăn">
+
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px">Tên Menu:
+              {{detailHoaDon.datBan.menu.tenMenu}}
+            </div>
+          </div>
+
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px">Danh sách món ăn
+            </div>
+          </div>
+          <div class="ui-grid-col-12 with-scroll table-panel">
+            <div class="vertical-scroll">
+              <table class="table table-hover">
+                <thead>
+                <tr class="black-muted-bg">
+                  <th class="align-right">STT</th>
+                  <th class="align-right">Ảnh</th>
+                  <th class="align-right">Tên Món</th>
+                  <th class="align-right">Số Lượng</th>
+                  <th class="align-right">Đơn Giá</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of detailHoaDon.ctMenu;  let i = index " class="no-top-border">
+                  <td class="align-right">{{i + 1}}</td>
+                  <td><img src="assets/images/upload/{{item.monAn.anh}}" width="20" height="20"></td>
+                  <td ngClass="nowrap">{{item.monAn.tenMon}}</td>
+                  <td class="align-right">{{item.soluong}}</td>
+                  <span *ngFor="let item2 of detailHoaDon.monAn;">
+                    <td class="align-right" *ngIf="item.monAn.idmonAn === item2.idmonAn">{{ +item2.bangGia[0]?.gia *
+                      +item.soluong }}
+                    </td>
+                  </span>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="Thanh Toán">
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px; padding-top: 10px; ">
+              Tổng Tiền:
+              {{detailHoaDon.tongCong}} Đồng
+            </div>
+          </div>
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px; padding-top: 10px; ">
+              Chiết Khấu:
+              {{(+detailHoaDon.khachHang.theUuDai.chietKhau * +detailHoaDon.tongCong) / 100}} Đồng
+            </div>
+          </div>
+          <div class="ui-grid-col-10">
+            <div class="ui-grid-col-10" style="width: initial; padding-bottom: 10px; padding-top: 10px; ">
+              Tổng Cộng:
+              {{+detailHoaDon.tongCong - ((+detailHoaDon.khachHang.theUuDai.chietKhau * +detailHoaDon.tongCong) / 100)}}
+              Đồng
+            </div>
+          </div>
+          <div class="ui-grid-col-12" style="padding-top: 30px" *ngIf="detailHoaDon.trangThai">
+            <div class="col-lg-8 col-md-12" style="margin-left: 115px;">
+              <button type="button" class="btn btn-success btn-lg"
+                      (click)="onUpdateHoaDon(detailHoaDon.datBan, detailHoaDon.khachHang, detailHoaDon.nhanVien,0, detailHoaDon.idhoaDon)">Thanh
+                Toán
+              </button>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</p-dialog>

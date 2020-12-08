@@ -1,0 +1,90 @@
+<div class="row">
+
+  <div class="col-md-12 ">
+
+    <ba-card cardTitle="Menu">
+      <button pButton type="button" (click)="AddMenu()" label="Thêm Mới"
+              style="left: 87%;margin-bottom: 10px; padding: 10px;"></button>
+      <p-dataGrid [value]="monAn" [paginator]="true" [rows]="12">
+        <p-header>
+          Danh Sách Món Ăn
+        </p-header>
+        <ng-template let-data pTemplate="item">
+          <div style="padding:3px" class="ui-g-12 ui-md-3">
+            <p-panel header="{{data.tenMon}}" [style]="{'text-align':'center'}">
+              <img src="assets/images/upload/{{data.anh}}" width="120"  height="90">
+              <div class="car-detail" style="margin-top: 10px">{{data.bangGia[0]?.gia ? data.bangGia[0].gia : "0" }} Đồng</div>
+              <hr class="ui-widget-content" style="border-top:0">
+              <i class="fa fa-search" (click)="selectCar(data)" style="cursor:pointer"></i>
+              <i class="fa fa-pencil" (click)="selectCar(data)" style="cursor:pointer" style="margin-left: 20px;"></i>
+            </p-panel>
+          </div>
+        </ng-template>
+      </p-dataGrid>
+    </ba-card>
+  </div>
+</div>
+<p-dialog header="Thông Tin Chi Tiết" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true"
+          width="600px" (onAfterHide)="onDialogHide()">
+  <div class="ui-grid ui-grid-responsive ui-grid-pad" *ngIf="selectedCar"
+       style="font-size:16px;text-align:center;padding:20px; width: 400px">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" style="text-align:center"><img style="
+    width: 100px;" src="assets/images/upload/{{selectedCar.anh}}"></div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">Tên Món Ăn:</div>
+      <div class="ui-grid-col-6">{{selectedCar.tenMon}}</div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">Giá Tiền:</div>
+      <div class="ui-grid-col-6">{{selectedCar.bangGia[0]?.gia ? selectedCar.bangGia[0].gia : "0" }} Đồng</div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">Ghi Chú:</div>
+      <div class="ui-grid-col-6">{{selectedCar.ghichu}}</div>
+    </div>
+
+  </div>
+</p-dialog>
+
+
+<p-dialog header="Thêm Món Ăn" [(visible)]="displayDialogAddMenu" [responsive]="true" showEffect="fade" [modal]="true"
+          width="700px" (onAfterHide)="onDialogHide()">
+  <div class="ui-grid ui-grid-responsive ui-grid-pad"
+       style="font-size:16px;text-align:center;padding:20px; width: 600px">
+    <div class="form-group">
+      <label for="input01">Text</label>
+      <input type="text" class="form-control" id="input01" placeholder="Text">
+    </div>
+    <div class="form-group">
+      <label for="input02">Password</label>
+      <input type="password" class="form-control" id="input02" placeholder="Password">
+    </div>
+    <div class="form-group">
+      <label for="input03">Rounded Corners</label>
+      <input type="text" class="form-control form-control-rounded" id="input03" placeholder="Rounded Corners">
+    </div>
+    <div class="form-group">
+      <label for="input04">With help</label>
+      <input type="text" class="form-control" id="input04" placeholder="With help">
+      <span class="help-block sub-little-text">A block of help text that breaks onto a new line and may extend beyond one line.</span>
+    </div>
+    <div class="form-group">
+      <label for="input05">Disabled Input</label>
+      <input type="text" class="form-control" id="input05" placeholder="Disabled Input" disabled>
+    </div>
+
+    <div class="form-group">
+      <label for="textarea01">Textarea</label>
+      <textarea placeholder="Default Input" class="form-control" id="textarea01"></textarea>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control form-control-sm" id="input2" placeholder="Small Input">
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control form-control-lg" id="input4" placeholder="Large Input">
+    </div>
+  </div>
+</p-dialog>

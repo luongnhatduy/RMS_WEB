@@ -1,0 +1,158 @@
+<div class="col-md-12">
+  <ba-card class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-12" style="height: 400px"
+           cardTitle="Báo Cáo Doanh Thu" baCardClass="traffic-panel medium-card with-scroll table-panel height-ba-card">
+    <p-dropdown [options]="listBaoCao" [(ngModel)]="selectedLoaiBaoCao" placeholder="Chọn Loại Báo Cáo"
+                styleClass="dropdown-list-custom" (onChange)="changeDropdown($event)"></p-dropdown>
+
+    <div *ngIf="selectedLoaiBaoCao ? selectedLoaiBaoCao.id == 1 : false">
+      <div class="row">
+        <div class="ui-g-12 ui-md-4">
+          <h3 style="margin-top: 15px;">Chọn Ngày</h3>
+          <p-calendar [(ngModel)]="date" [showIcon]="true" (onSelect)="selectdate()"></p-calendar>
+        </div>
+        <div class="ui-g-12 ui-md-4">
+          <h2 style=" margin-top: -11%; margin-bottom: 30px">Báo Cáo Doanh Thu Theo Ngày</h2>
+          <div class="text-custom">Ngày: {{date| date: 'dd/MM/yyyy' }}</div>
+          <div class="text-custom">Tổng Số Hóa Đơn: {{tongSLHoaDon}} Đơn</div>
+          <div class="text-custom">Tổng Tiền: {{tongCong}} Đồng</div>
+        </div>
+      </div>
+      <div class="vertical-scroll" style="margin-top: 10px; height: 50px">
+        <table class="table table-condensed table-hover table-fixed ">
+          <thead>
+          <tr>
+            <th class="table-id" style="width: 100px">STT</th>
+            <th style="width: 200px">Tên Khách Hàng</th>
+            <th style="width: 150px">Bàn</th>
+            <th style="width: 150px">Menu</th>
+            <th style="width: 15  0px">Tổng Tiền</th>
+            <th>Trạng Thái</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of danhSachHoaDonFilter; let i = index">
+            <td class="table-id">{{i + 1}}</td>
+            <td>{{ item.khachHang.tenKhachHang }}</td>
+            <td>{{ item.datBan.ban.tenBan }}</td>
+            <td>{{ item.datBan.menu.tenMenu }}</td>
+            <td>{{item.tongCong}}</td>
+            <td>
+              <div class="col-sm-4 col-6 col-lg-4 col-md-6">
+                <div class="btn-group flex-dropdown" ngbDropdown>
+                  <button type="button"
+                          class="btn btn-{{ item.trangThai === 0 ? 'success' : 'warning' }}">
+                    {{ item.trangThai === 0 ? 'Thanh Toán' : 'Chưa Thanh Toán' }}
+                  </button>
+
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="selectedLoaiBaoCao ? selectedLoaiBaoCao.id == 2 : false">
+      <div class="row">
+        <div class="ui-g-12 ui-md-4">
+          <div class="row">
+            <div class="ui-g-12 ui-md-4">
+              <h3 style="margin-top: 15px;">Chọn Tháng</h3>
+              <p-dropdown [options]="months" [(ngModel)]="month" [style]="{'width':'90px'}" placeholder="Chọn Tháng"
+                          (onChange)="seletedYearByMonth()"></p-dropdown>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+              <h3 style="margin-top: 15px;">Chọn Năm</h3>
+              <p-dropdown [options]="years" [(ngModel)]="yearByMonth" [style]="{'width':'90px'}" placeholder="Chọn Năm"
+                          (onChange)="seletedYearByMonth()"></p-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <h2 style=" margin-top: -7%; margin-bottom: 30px">Báo Cáo Doanh Thu Theo Tháng</h2>
+          <div class="text-custom">Tháng: {{month}}/{{yearByMonth}}</div>
+          <div class="text-custom">Tổng Số Hóa Đơn: {{tongSLHoaDon}} Đơn</div>
+          <div class="text-custom">Tổng Tiền: {{tongCong}} Đồng</div>
+        </div>
+      </div>
+      <div class="vertical-scroll" style="margin-top: 10px">
+        <table class="table table-condensed table-hover ">
+          <thead>
+          <tr>
+            <th class="table-id">STT</th>
+            <th>Ngày</th>
+            <th>Tổng Số Hóa Đơn</th>
+            <th>Tổng Tiền</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of danhSachHoaDonByMonth; let i = index" (click)="viewHoaDon(item)">
+            <td class="table-id">{{i + 1}}</td>
+            <td>{{ item.ngay }}</td>
+            <td>{{ item.tongHD }}</td>
+            <td>{{ item.tongTien }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="selectedLoaiBaoCao ? selectedLoaiBaoCao.id == 3 : false">
+      <div class="row">
+        <div class="ui-g-12 ui-md-4">
+          <h3 style="margin-top: 15px;">Chọn Năm</h3>
+          <p-dropdown [options]="years" [(ngModel)]="year" [style]="{'width':'90px'}" placeholder="Chọn Năm"
+                      (onChange)="seletedYear()"></p-dropdown>
+        </div>
+        <div class="ui-g-12 ui-md-4">
+          <h2 style=" margin-top: -11%; margin-bottom: 30px">Báo Cáo Doanh Thu Theo Năm</h2>
+          <div class="text-custom">Năm: {{year}}</div>
+          <div class="text-custom">Tổng Số Hóa Đơn: {{tongSLHoaDon}} Đơn</div>
+          <div class="text-custom">Tổng Tiền: {{tongCong}} Đồng</div>
+        </div>
+      </div>
+      <p-growl [value]="msgs"></p-growl>
+
+      <p-chart type="line" [data]="data" [height]="80" (onDataSelect)="selectData($event)"></p-chart>
+    </div>
+  </ba-card>
+</div>
+<p-dialog header="Thông Tin Chi Tiết" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true"
+          width="600px" (onAfterHide)="onDialogHide()" [height]="400">
+  <div class="ui-grid ui-grid-responsive ui-grid-pad" *ngIf="detailHoaDonByDay"
+       style="font-size:16px;text-align:center;padding:20px; width: 700px">
+    <div class="vertical-scroll" style="margin-top: 10px; height: 200px">
+      <table class="table table-condensed table-hover table-fixed">
+        <thead>
+        <tr>
+          <th class="table-id">STT</th>
+          <th>Tên Khách Hàng</th>
+          <th>Bàn</th>
+          <th>Menu</th>
+          <th>Tổng Tiền</th>
+          <th>Trạng Thái</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of detailHoaDonByDay; let i = index">
+          <td class="table-id">{{i + 1}}</td>
+          <td>{{ item.khachHang.tenKhachHang }}</td>
+          <td>{{ item.datBan.ban.tenBan }}</td>
+          <td>{{ item.datBan.menu.tenMenu }}</td>
+          <td>{{item.tongCong}}</td>
+          <td>
+            <div class="col-sm-4 col-6 col-lg-4 col-md-6">
+              <div class="btn-group flex-dropdown" ngbDropdown>
+                <button type="button"
+                        class="btn btn-{{ item.trangThai === 0 ? 'success' : 'warning' }}">
+                  {{ item.trangThai === 0 ? 'Thanh Toán' : 'Chưa Thanh Toán' }}
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</p-dialog>

@@ -1,0 +1,228 @@
+<div class="col-md-12">
+  <ba-card cardTitle="Danh Sách Đơn Đặt Hàng" baCardClass="with-scroll table-panel height-ba-card">
+    <button pButton type="button" (click)="addDonDatHang()" label="Tạo Đơn Đặt Hàng"
+            style="left: 84%;margin-bottom: 10px; padding: 10px;"></button>
+    <div class="vertical-scroll">
+      <table class="table table-condensed table-hover ">
+        <thead>
+        <tr>
+          <th class="table-id">STT</th>
+          <th>Ngày Đặt Hàng</th>
+          <th>Nhà Cung Cấp</th>
+          <th>Số Điện Thoại NCC</th>
+          <th>Nhân Viên Đặt</th>
+          <th>Trạng Thái</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of danhSachDonDatHang; let i = index" (click)="showDetailDonDatHang(item)">
+          <td class="table-id">{{i + 1}}</td>
+          <td>{{ item.ngayDatHang }}</td>
+          <td>{{ item.nhaCungCap.tenNcc }}</td>
+          <td>{{ item.nhaCungCap.sdt }}</td>
+          <td>{{ item.nhanVien.ho }} {{ item.nhanVien.ten }}</td>
+          <td>
+            <div class="col-sm-4 col-6 col-lg-4 col-md-6">
+              <div class="btn-group flex-dropdown" ngbDropdown>
+                <button type="button"
+                        class="btn btn-{{ item.trangThai === 0 ? 'warning' : 'success' }}">
+                  {{ item.trangThai === 0 ? 'Chờ' : 'Đã Nhập Hàng' }}
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </ba-card>
+  <ba-card cardTitle="Danh Sách Phiếu Nhập Hàng" baCardClass="with-scroll table-panel height-ba-card">
+    <div class="vertical-scroll">
+      <table class="table table-condensed table-hover table-bordered">
+        <thead>
+        <tr>
+          <th class="table-id">STT</th>
+          <th>Ngày Nhập Hàng</th>
+          <th>Nhà Cung Cấp</th>
+          <th>Số Điện Thoại NCC</th>
+          <th>Nhân Viên Nhập</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of danhSachPhieuNhap; let i = index">
+          <td class="table-id">{{i + 1}}</td>
+          <td>{{ item.nhayNhap }}</td>
+          <td>{{ item.donDatHang.nhaCungCap.tenNcc }}</td>
+          <td>{{ item.donDatHang.nhaCungCap.sdt }}</td>
+          <td>{{ item.nhanVien.ho }} {{ item.nhanVien.ten }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </ba-card>
+</div>
+
+<p-dialog header="Thông Tin Chi Tiết Đơn Đặt Hàng" [(visible)]="displayDialogDonDatHang" [responsive]="false"
+          showEffect="fade"
+          [modal]="true"
+          width="700px" (onAfterHide)="onDialogHideDonDatHang()">
+  <div class="ui-grid ui-grid-responsive ui-grid-pad" *ngIf="detailDonDatHang"
+       style="font-size:16px;text-align:center;padding:20px; width: 700px;  height: 500px !important;">
+    <div class="row">
+      <div class="xs-10 col-md-9">
+        <div class="ui-grid-col-10"
+             style="width: initial;padding-top: 20px; padding-bottom: 10px; padding-left: 200px;">
+          Ngày Đặt Hàng:
+          {{detailDonDatHang.ngayDatHang}}
+        </div>
+
+        <div class="ui-grid-col-10" style="width: initial; padding-left: 200px; padding-bottom: 10px">Nhà Cung Cấp:
+          {{detailDonDatHang.nhaCungCap.tenNcc}}
+        </div>
+
+        <div class="ui-grid-col-10" style="width: initial; padding-left: 200px; padding-bottom: 10px">Số Điện Thoại NCC:
+          {{detailDonDatHang.nhaCungCap.sdt}}
+        </div>
+
+        <div class="ui-grid-col-10"
+             style="width: initial; padding-left: 200px; padding-bottom: 10px; padding-bottom: 40px">Nhân Viên Đặt:
+          {{detailDonDatHang.nhanVien.ho}} {{detailDonDatHang.nhanVien.ten}}
+        </div>
+      </div>
+      <div class="xs-2 col-md-2">
+        <button type="button"
+                class="btn btn-{{ detailDonDatHang.trangThai === 0 ? 'success' : 'primary' }}" (click)="nhapHang(detailDonDatHang)">
+          {{ detailDonDatHang.trangThai === 0 ? 'Nhập Hàng' : 'Đã Nhập Hàng' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="ui-grid-col-10">
+      <div class="ui-grid-col-10" style="width: initial;">Danh Sách Hàng Hóa
+      </div>
+    </div>
+
+    <div class="horizontal-scroll">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tên Hàng Hóa</th>
+          <th>Số Lượng Đặt</th>
+          <th>Đợn Vị Tính</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of detailDonDatHang.CTDonDatHang; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.hangHoa.tenHang }}</td>
+          <td>{{ item.sldat }}</td>
+          <td>{{ item.hangHoa.donViTinh.tenDonVi }}</td>
+        </tr>
+        <td></td>
+        <td></td>
+        <td>{{tongSLHangDat}}</td>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</p-dialog>
+<p-dialog header="Tạo Đơn Đặt Hàng" [(visible)]="displayDialogTaoDonDatHang" [responsive]="false" showEffect="fade"
+          [modal]="true"
+          [width]="1200" [height]="700" (onAfterHide)="onDialogHideTaoDonDatHang()">
+  <div class="row">
+    <div class="xs-6 col-md-6">
+      <div class="form-group">
+        <label for="input11">Ngày Đặt Hàng: </label>
+        <input type="text" class="form-control" id="input11" placeholder="Text" [disabled]="true"
+               [(ngModel)]="donDatHangObject.ngayDatHang">
+      </div>
+      <div class="form-group">
+        <label for="input12">Nhân Viên Đặt Hàng: </label>
+        <input type="text" class="form-control" id="input12" placeholder="Text" [disabled]="true"
+               [(ngModel)]="donDatHangObject.nhanVien.ten">
+      </div>
+    </div>
+    <div class="xs-6 col-md-6">
+      <div class="form-group">
+        <label>Tên Nhà Cung Cấp: </label>
+        <p-autoComplete [(ngModel)]="tenNhaCungCap" [suggestions]="filteredBrands"
+                        (completeMethod)="filterNhaCungCap($event)"
+                        (onSelect)="captureId($event)"
+                        [size]="35"
+                        [minLength]="1" placeholder="Nhập Tên Nhà cung Cấp" [dropdown]="true"
+                        (onDropdownClick)="handleDropdownClick($event)">
+          <ng-template let-ncc pTemplate="item">
+            <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5">
+              <div style="font-size:18px;float:right;margin:10px 10px 0 0">{{ncc.tenNcc}}</div>
+            </div>
+          </ng-template>
+        </p-autoComplete>
+      </div>
+      <div class="form-group">
+        <label for="input01">Số Điện Thoại NCC: </label>
+        <input type="text" class="form-control" id="input01" placeholder="Text" [(ngModel)]="nhaCungCap.sdt">
+      </div>
+      <div class="form-group">
+        <label for="input02">Địa Chỉ: </label>
+        <input type="text" class="form-control" id="input02" placeholder="Text" [(ngModel)]="nhaCungCap.diaChi">
+      </div>
+      <div class="form-group">
+        <label for="input03">Email: </label>
+        <input type="text" class="form-control" id="input03" placeholder="Text" [(ngModel)]="nhaCungCap.email">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="xs-6 col-md-8">
+
+      <div class="ui-grid-col-10">
+        <div class="ui-grid-col-10" style="width: initial;">Danh Sách Hàng Hóa
+        </div>
+      </div>
+      <p-dataTable [value]="danhSachHangHoa" selectionMode="single" [(selection)]="selectedCar" [responsive]="true"
+                   [rows]="7" [paginator]="true" (onRowSelect)="onRowSelect($event)">
+        <p-column field="tenHang" header="Tên Hàng Hóa" sortable="true" [filter]="true"
+                  filterPlaceholder="Search"></p-column>
+        <p-column field="slhienCo" header="Số Lượng Hiện Có" sortable="true"></p-column>
+        <p-column field="donViTinh" header="Đơn Vị Tính"></p-column>
+      </p-dataTable>
+    </div>
+    <div class="xs-6 col-md-4">
+      <div class="ui-grid-col-10">
+        <div class="ui-grid-col-10" style="width: initial;">Danh Sách Đặt Hàng
+        </div>
+      </div>
+      <div class="horizontal-scroll">
+        <table class="table table-hover table-fixed">
+          <thead>
+          <tr class="black-muted-bg">
+            <th class="browser-icons" style="width: 100px">STT</th>
+            <th class="-align-left" style="width: 150px">Tên Hàng Hóa</th>
+            <th class="-align-left">Số Lượng</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of orderHangHoas;  let i = index" class="no-top-border">
+            <td ngClass="nowrap">{{i + 1}}</td>
+            <td class="-align-left">{{item.hangHoa.tenHang}}</td>
+            <td class="-align-left"><i
+              class="fa fa-minus" (click)="downSoLuong(item)" style="cursor:pointer; padding-right: 10px"></i>{{item.sldat}}
+              <i class="fa fa-plus" (click)="upSoLuong(item)"
+                 style="cursor:pointer; padding-left: 5px"></i>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <td></td>
+        <td style="width: 100px">Tổng Cộng:</td>
+        <td>{{tongCongDatHang}}</td>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 offset-md-3">
+    <button type="button" class="btn btn-success btn-lg" style="margin-left: 215px;margin-top: -20px;width: 151px;"
+            (click)="submitDonDatHang(donDatHangObject)">Đặt Hàng
+    </button>
+  </div>
+</p-dialog>
